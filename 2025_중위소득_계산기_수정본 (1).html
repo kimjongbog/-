@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025년 중위소득 계산기</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f5f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .calculator {
+      width: 100%;
+      max-width: 500px;
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    h1 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #114b3f;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+    label {
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 600;
+      color: #333;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      border: 1px solid #c9d1d0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1d6d5c;
+      color: #fff;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover { background: #155344; }
+    .result {
+      margin-top: 20px;
+      padding: 18px;
+      background: #f3faf8;
+      border-left: 4px solid #1d6d5c;
+      border-radius: 6px;
+      font-size: 1rem;
+      word-break: keep-all;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h1>2025년 중위소득 계산기</h1>
+    <label for="members">가구원 수</label>
+    <select id="members">
+      <option value="1">1인</option>
+      <option value="2">2인</option>
+      <option value="3">3인</option>
+      <option value="4">4인</option>
+      <option value="5">5인</option>
+      <option value="6">6인</option>
+      <option value="7">7인</option>
+    </select>
+
+    <label for="income">월 소득 (원)</label>
+    <input type="number" id="income" placeholder="예: 2500000">
+
+    <button onclick="calcMedian()">계산하기</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const median2025 = {
+      1: 2432000,
+      2: 3940000,
+      3: 5042000,
+      4: 6138000,
+      5: 7197000,
+      6: 8220000,
+      7: 9232000
+    };
+
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function calcMedian() {
+      const members = document.getElementById('members').value;
+      const incomeInput = document.getElementById('income').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!incomeInput || isNaN(incomeInput) || incomeInput <= 0) {
+        resultDiv.style.display = 'block';
+        resultDiv.textContent = '정확한 월 소득을 입력해 주세요.';
+        return;
+      }
+
+      const income = parseInt(incomeInput, 10);
+      const base = median2025[members];
+      const percent = ((income / base) * 100).toFixed(1);
+
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <strong>📋 결과</strong><br>
+        ${numberWithCommas(income)}원은<br>
+        ${members}인 가구 기준 중위소득 대비 <strong>${percent}%</strong> 입니다.<br>
+        (기준 중위소득: ${numberWithCommas(base)}원)
+      `;
+    }
+  </script>
+</body>
+</html>
